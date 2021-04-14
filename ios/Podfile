@@ -4,6 +4,8 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 platform :ios, '10.0'
 
 target 'myAwesomeProject' do
+  rn_maps_path = '../node_modules/react-native-maps'
+  pod 'react-native-google-maps', :path => rn_maps_path
   config = use_native_modules!
 
   use_react_native!(
@@ -22,8 +24,53 @@ target 'myAwesomeProject' do
   # Note that if you have use_frameworks! enabled, Flipper will not work and
   # you should disable the next line.
   use_flipper!()
+  pod 'RNPhotoEditor', :path => '../node_modules/react-native-photo-editor/ios'
+use_frameworks! :linkage => :static
+pod 'iOSPhotoEditor', :git => 'https://github.com/prscX/photo-editor', :branch => 'master'
 
-  post_install do |installer|
-    react_native_post_install(installer)
+post_install do |installer|
+installer.pods_project.targets.each do |target|
+  flipper_post_install(installer) # as stated here https://fbflipper.com/docs/getting-started/react-native-ios/#react-native-063
+  if target.name.include?('iOSPhotoEditor')
+    target.build_configurations.each do |config|
+      config.build_settings['SWIFT_VERSION'] = '5'
+    end
   end
+  if target.name == 'react-native-google-maps'
+    target.build_configurations.each do |config|
+      config.build_settings['CLANG_ENABLE_MODULES'] = 'No' # as mentioned here https://github.com/react-native-maps/react-native-maps/issues/3597#issuecomment-745026120
+    end
+  end
+  if (target.name&.eql?('FBReactNativeSpec')) #as mentioned here https://github.com/software-mansion/react-native-screens/issues/842#issuecomment-812543933
+    target.build_phases.each do |build_phase|
+      if (build_phase.respond_to?(:name) && build_phase.name.eql?('[CP-User] Generate Specs'))
+        target.build_phases.move(build_phase, 0)
+      end
+    end
+  end
+end
+end 
+
+$static_framework = ['FlipperKit', 'Flipper', 'Flipper-Folly',
+'CocoaAsyncSocket', 'ComponentKit', 'Flipper-DoubleConversion',
+'Flipper-Glog', 'Flipper-PeerTalk', 'Flipper-RSocket', 'Yoga', 'YogaKit',
+'CocoaLibEvent', 'OpenSSL-Universal', 'boost-for-react-native']
+
+
+pre_install do |installer|
+Pod::Installer::Xcode::TargetValidator.send(:define_method, :verify_no_static_framework_transitive_dependencies) {}
+installer.pod_targets.each do |pod|
+    if $static_framework.include?(pod.name)
+      def pod.build_type;
+        Pod::BuildType.static_library
+      end
+    end
+  end
+end
+
+
+
+  # post_install do |installer|
+  #   react_native_post_install(installer)
+  # end
 end

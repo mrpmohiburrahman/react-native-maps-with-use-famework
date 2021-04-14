@@ -5306,6 +5306,16 @@ react-native-codegen@^0.0.6:
     jscodeshift "^0.11.0"
     nullthrows "^1.1.1"
 
+react-native-maps@^0.27.1:
+  version "0.27.1"
+  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.27.1.tgz#2f10cd417bb2fd938c9e015b1c9b6d9b1a44b97f"
+  integrity sha512-HygBkZBecTnIVRYrSiLRAvu4OmXOYso/A7c6Cy73HkOh9CgGV8Ap5eBea24tvmFGptjj5Hg8AJ94/YbmWK1Okw==
+
+react-native-photo-editor@^1.0.10:
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/react-native-photo-editor/-/react-native-photo-editor-1.0.10.tgz#de47c6f8da524d2251a552afad3f52582f050845"
+  integrity sha512-WqASsY2FrateKGEgglVvPYiRlmuX0F8vg7D8MRSqvv3hpetq+SQEbidWtxG+xZPEM5oIa2/w3tqMROX8+4Ubsg==
+
 react-native@0.64.0:
   version "0.64.0"
   resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.64.0.tgz#c3bde5b638bf8bcf12bae6e094930d39cb942ab7"
